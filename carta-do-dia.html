@@ -1,0 +1,671 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#2a1f3d">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Carta do dia">
+<link rel="apple-touch-icon" href="icone.png">
+<title>Carta do dia ❤️</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;700&family=Newsreader:ital,wght@0,400;1,400&display=swap" rel="stylesheet">
+<link rel="shortcut icon" href="Coração Kawaii Roxo L♡A com Brilhos.png" type="image/x-icon">
+<style>
+  :root {
+    --noite: #2a1f3d;
+    --papel: #f4eff9;
+    --tinta: #3b2a55;
+    --rosa: #c2456b;
+    --suave: #7a6a94;
+    --linha: #d9cfe8;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; min-height: 100%; }
+  body {
+    background: var(--noite);
+    color: var(--tinta);
+    font-family: "Newsreader", Georgia, serif;
+    display: flex;
+    justify-content: center;
+    padding: 32px 16px 56px;
+  }
+  .carta {
+    width: 100%;
+    max-width: 560px;
+    background: var(--papel);
+    border-radius: 6px;
+    padding: 40px 36px 36px;
+    box-shadow: 0 18px 50px rgba(0, 0, 0, .35);
+    visibility: hidden;
+    opacity: 0;
+  }
+  .carta.visivel { visibility: visible; opacity: 1; animation: abrir .9s ease-out both; }
+  @keyframes abrir {
+    from { opacity: 0; transform: translateY(18px) rotate(-.6deg); }
+    to   { opacity: 1; transform: none; }
+  }
+  .data { margin: 0 0 5px; color: var(--suave); font-style: italic; font-size: 1rem; }
+  .data::first-letter { text-transform: uppercase; }
+  .clima { margin: 0 0 28px; font-size: 1rem; color: var(--suave); line-height: 1.55; min-height: 1.4em; }
+  .clima strong { color: var(--rosa); font-size: 1.15rem; font-weight: 500; }
+  .clima .detalhes { font-size: .92rem; }
+  .clima .cuidado { color: var(--tinta); }
+  .foto {
+    display: block;
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+    border-radius: 3px;
+    margin: 0 0 28px;
+    background: #ddd3ea;
+    transform: rotate(-1deg);
+    border: 8px solid #fff;
+    box-shadow: 0 6px 16px rgba(59, 42, 85, .18);
+  }
+  .mensagem { font-family: "Caveat", cursive; font-size: 2rem; line-height: 1.3; font-weight: 500; margin: 0 0 28px; }
+  .assinatura { font-family: "Caveat", cursive; font-size: 1.7rem; color: var(--rosa); margin: 0 0 24px; }
+  .juntos { border-top: 1px solid var(--linha); padding-top: 16px; margin: 0; font-size: 1rem; color: var(--suave); }
+  .juntos strong { color: var(--rosa); font-weight: 400; font-size: 1.15rem; }
+  @media (max-width: 420px) {
+    .carta { padding: 28px 22px; }
+    .mensagem { font-size: 1.7rem; }
+  }
+  /* ===== CALENDÁRIO ===== */
+  .carta.oculta { display: none; }
+  .topo { display: flex; justify-content: flex-end; margin: -14px 0 8px; }
+  .link-topo {
+    border: 0; background: none; padding: 4px 0; cursor: pointer;
+    color: var(--rosa); font-family: "Newsreader", Georgia, serif; font-size: 1rem;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .calendario {
+    width: 100%; max-width: 560px; align-self: flex-start;
+    background: var(--papel); border-radius: 6px; padding: 28px 24px 32px;
+    box-shadow: 0 18px 50px rgba(0, 0, 0, .35);
+  }
+  .cal-titulo { font-family: "Caveat", cursive; font-size: 2.2rem; font-weight: 500; margin: 8px 0 14px; color: var(--tinta); }
+  .cal-nav { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; font-size: 1.15rem; }
+  .cal-nav button {
+    border: 0; background: #e8dff3; color: var(--tinta); cursor: pointer;
+    width: 38px; height: 38px; border-radius: 50%; font-size: 1.4rem; line-height: 1;
+  }
+  .cal-mes::first-letter { text-transform: uppercase; }
+  .cal-grade { display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; text-align: center; }
+  .cal-cab { font-size: .85rem; color: var(--suave); padding-bottom: 4px; }
+  .cal-dia {
+    position: relative; aspect-ratio: 1; display: flex; align-items: center; justify-content: center;
+    border-radius: 50%; font-size: 1rem; color: var(--tinta);
+  }
+  .cal-dia.lido { background: var(--rosa); color: #fff; }
+  .cal-dia.lido::after { content: "✓"; position: absolute; top: 1px; right: 5px; font-size: .62rem; }
+  .cal-dia.hoje { outline: 2px solid var(--tinta); outline-offset: 1px; }
+  .cal-resumo { margin: 18px 0 0; padding-top: 14px; border-top: 1px solid var(--linha); font-size: 1rem; color: var(--suave); }
+
+  /* ===== CONFIRMAR LEITURA ===== */
+  .confirmar { margin: 0 0 24px; }
+  .btn-lida {
+    border: 0; border-radius: 999px; padding: 12px 24px;
+    background: var(--rosa); color: #fff; cursor: pointer;
+    font-family: "Newsreader", Georgia, serif; font-size: 1.05rem;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .btn-lida.lida { background: #e8dff3; color: var(--suave); cursor: default; }
+  .sequencia { margin: 10px 0 0; font-size: .95rem; color: var(--suave); }
+
+  /* ===== ENVELOPE ===== */
+  .envelope-tela {
+    position: fixed; inset: 0; z-index: 10;
+    display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 32px;
+    width: 100%; border: 0; padding: 24px;
+    background: var(--noite); color: var(--papel);
+    font-family: "Newsreader", Georgia, serif; font-size: 1.1rem; text-align: center;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+    transition: opacity .7s ease, visibility .7s;
+  }
+  .envelope-tela.saindo { opacity: 0; visibility: hidden; }
+  .envelope { position: relative; display: block; width: min(78vw, 320px); aspect-ratio: 3 / 2; perspective: 900px; }
+  .envelope-dica { display: block; max-width: 300px; line-height: 1.4; font-style: italic; }
+  .env-corpo, .env-papel, .env-frente, .env-aba, .env-selo { position: absolute; display: block; }
+  .env-corpo { inset: 0; background: #cbbde0; border-radius: 6px; box-shadow: 0 14px 40px rgba(0, 0, 0, .4); }
+  .env-papel { left: 7%; right: 7%; top: 52%; height: 40%; background: var(--papel); border-radius: 3px; z-index: 1; transition: transform .8s ease .5s; }
+  .env-frente { inset: 0; background: #ddd1ed; border-radius: 6px; clip-path: polygon(0 0, 50% 52%, 100% 0, 100% 100%, 0 100%); z-index: 2; }
+  .env-aba { left: 0; right: 0; top: 0; height: 52%; background: #e9e0f4; clip-path: polygon(0 0, 100% 0, 50% 100%); transform-origin: top; transition: transform .7s ease; z-index: 3; }
+  .env-selo {
+    left: 50%; top: 52%; width: 38px; height: 38px; margin: -19px 0 0 -19px;
+    border-radius: 50%; background: var(--rosa); color: #fff; z-index: 4;
+    display: flex; align-items: center; justify-content: center; font-size: 1.2rem;
+    transition: opacity .3s; animation: pulsar 1.4s ease-in-out infinite;
+  }
+  @keyframes pulsar { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.14); } }
+  .aberto .env-selo { opacity: 0; animation: none; }
+  .aberto .env-aba { transform: rotateX(180deg); z-index: 0; }
+  .aberto .env-papel { transform: translateY(-125%); }
+
+  @media (prefers-reduced-motion: reduce) {
+    .carta.visivel { animation: none; }
+    .env-aba, .env-papel, .envelope-tela { transition: none; }
+    .env-selo { animation: none; }
+  }
+</style>
+</head>
+<body>
+  <button class="envelope-tela" id="envelope" type="button" aria-label="Abrir a carta">
+    <span class="envelope">
+      <span class="env-corpo"></span>
+      <span class="env-papel"></span>
+      <span class="env-frente"></span>
+      <span class="env-aba"></span>
+      <span class="env-selo">♥</span>
+    </span>
+    <span class="envelope-dica" id="envelope-dica"></span>
+  </button>
+
+  <main class="carta" id="tela-carta">
+    <div class="topo">
+      <button type="button" class="link-topo" id="abrir-cal">📅 Calendário</button>
+    </div>
+    <p class="data" id="data"></p>
+    <p class="clima" id="clima">Olhando o céu da sua cidade...</p>
+    <img class="foto" id="foto" alt="Nós dois">
+    <p class="mensagem" id="mensagem"></p>
+    <p class="assinatura" id="assinatura"></p>
+
+    <div class="confirmar">
+      <button type="button" class="btn-lida" id="btn-lida">Li a carta de hoje 💌</button>
+      <p class="sequencia" id="sequencia"></p>
+    </div>
+    <p class="juntos" id="juntos"></p>
+  </main>
+
+  <section class="calendario" id="tela-calendario" hidden>
+    <button type="button" class="link-topo" id="voltar-carta">← Carta de hoje</button>
+    <h2 class="cal-titulo">Nosso calendário</h2>
+    <div class="cal-nav">
+      <button type="button" id="mes-anterior" aria-label="Mês anterior">‹</button>
+      <span class="cal-mes" id="cal-mes"></span>
+      <button type="button" id="mes-proximo" aria-label="Próximo mês">›</button>
+    </div>
+    <div class="cal-grade" id="cal-grade"></div>
+    <p class="cal-resumo" id="cal-resumo"></p>
+  </section>
+
+<script>
+/* =====================================================
+   CONFIGURAÇÕES
+===================================================== */
+const CONFIG = {
+  cidadeDela: "São Bernardo do Campo",
+  nomeDela: "amor",
+  seuNome: "Lucas",
+  inicioNamoro: "2026-09-06",
+  // Seu WhatsApp, só números, com 55 + DDD. Ex: "5511999999999"
+  // Deixe "" para não abrir o WhatsApp (só marca como lida)
+  whatsappDele: "",
+  fotos: [
+    "fotos/1.jpeg",
+    "fotos/2.jpeg",
+    "fotos/3.jpeg",
+    "fotos/4.jpeg",
+    "fotos/5.jpeg",
+    "fotos/6.jpeg",
+    "fotos/7.jpeg"
+  ]
+};
+
+/* =====================================================
+   MENSAGENS
+===================================================== */
+const MENSAGENS = [
+  "Hoje eu só queria te lembrar que você deixa qualquer dia mais leve. ❤️",
+  "Se o dia estiver pesado, lembra que eu tô torcendo por você daqui. ❤️",
+  "Eu gosto de como a gente consegue rir das coisas mais bobas.",
+  "Você é a minha parte favorita de qualquer dia. ❤️",
+  "Obrigado por ser você. Sério, não muda não.",
+  "Bom dia! Que hoje seja daqueles dias em que tudo dá certo. ❤️",
+  "Sempre que eu lembro de você, eu sorrio sozinho.",
+  "Daqui a pouco a gente se vê e o dia fica melhor. ❤️",
+  "Você merece todo o carinho do mundo.",
+  "Escolhi você de novo hoje. E amanhã também. ❤️",
+  "Espero que seu dia seja tão bonito quanto o sorriso que você coloca no meu rosto.",
+  "Só passando para lembrar que tem alguém aqui pensando em você.",
+  "Meu lugar favorito continua sendo perto de você.",
+  "Mais um dia em que eu tenho sorte de ter você na minha vida.",
+  "Você consegue deixar até os dias comuns especiais.",
+  "Espero que você tenha um dia tranquilo, bonito e cheio de motivos para sorrir. ❤️",
+  "Só queria deixar um pedacinho do meu carinho aqui para você encontrar hoje.",
+  "Eu escolheria você de novo, em qualquer dia, em qualquer lugar.",
+  "Passando só pra dizer que pensei em você assim que acordei. ☀️",
+  "Seu sorriso é o melhor jeito de começar o dia, mesmo quando eu só lembro dele. 😊",
+  "Que hoje seja leve pra você, do começo ao fim.",
+  "Se bater vontade de desistir de alguma coisa hoje, lembra do quanto você já conseguiu.",
+  "Tem gente aqui muito feliz por você existir. ❤️",
+  "Hoje o recado é simples: você é demais.",
+  "Tô torcendo por você em tudo que tiver pra fazer hoje.",
+  "Cada conversa com você melhora o meu dia.",
+  "Respira fundo, toma uma água e lembra que você dá conta. 💧",
+  "Eu gosto muito de como você me faz rir.",
+  "Se hoje tiver muita pressa, não esquece de parar um minutinho pra respirar.",
+  "Você tem um jeitinho que eu nunca vou conseguir explicar direito, mas adoro.",
+  "Que seu café, seu almoço e seu dia sejam gostosos hoje. ☕",
+  "Só queria que você soubesse que tem alguém muito orgulhoso de você por aqui.",
+  "Um dia de cada vez, e eu tô aqui em todos eles. ❤️",
+  "Se o dia pesar, lembra que você pode me chamar a qualquer hora.",
+  "Você é uma das melhores coisas que me aconteceram ultimamente.",
+  "Hoje acordei com vontade de te dar um abraço apertado. 🤗",
+  "Que você se sinta tão querida hoje quanto você merece.",
+  "As coisas pequenas ficam grandes quando é com você.",
+  "Se cuida hoje, tá? Você é importante demais pra mim.",
+  "Me dá um sorriso hoje, nem que seja numa foto bem boba. 😄",
+  "Tem dia que eu só quero ouvir a sua voz, e hoje é um deles.",
+  "Que sua playlist de hoje seja boa e seu dia também. 🎶",
+  "Você tem o dom de deixar tudo mais bonito.",
+  "Hoje eu só queria te desejar paz, risada e coisa boa.",
+  "Não esquece de comer direitinho hoje. O seu bem-estar importa muito.",
+  "O seu jeito de ser é um presente pra quem tá perto de você.",
+  "Boa sorte em tudo hoje! Já tô com saudade de ouvir como foi.",
+  "Entre tantas pessoas no mundo, ainda bem que a gente se encontrou. ❤️",
+  "Qualquer dia ao seu lado vira um bom dia.",
+  "Lembra de ser gentil com você mesma hoje.",
+  "Sei que você tem muita coisa na cabeça, mas sempre tem espaço pra uma mensagem minha, né? 😉",
+  "Você merece descansar, rir e ser feliz hoje.",
+  "Que o seu dia tenha menos pressa e mais abraço.",
+  "Você ilumina mais do que imagina. ✨",
+  "Se hoje for cansativo, pensa que o fim do dia tá mais perto e eu tô por aqui. ❤️",
+  "Tô feliz de poder te escrever mais uma carta.",
+  "O seu riso, o seu jeito, tudo em você me faz bem.",
+  "Peço pro universo cuidar de você hoje, já que eu não posso estar aí.",
+  "Se der, olha pro céu hoje e lembra que a gente divide o mesmo. 🌤️",
+  "Você é tipo aquela música que eu nunca enjoo de ouvir. 🎧",
+  "Que ninguém tire o seu bom humor hoje!",
+  "Só mais um lembrete de que eu gosto muito de você.",
+  "O melhor da minha rotina é pensar em você."
+];
+
+const MENSAGENS_CHUVA = [
+  "Se estiver saindo, leva um guarda-chuva, amor. Quero você bem e sequinha. 🌧️❤️",
+  "Parece que a chuva resolveu aparecer por aí. Se cuida e não esquece o guarda-chuva. 🌧️",
+  "Dia de chuva por aí... Vai com cuidado, amor. ❤️",
+  "Se for sair, dá uma olhadinha no céu antes. Parece que pode chover. 🌧️",
+  "Chuvinha por aí. Se agasalha e se cuida no caminho, tá? ❤️"
+];
+
+const MENSAGENS_CALOR = [
+  "Hoje está quente por aí. Bebe bastante água e se refresca, amor. ☀️💧❤️",
+  "Calorzinho hoje! Não esquece de beber água e ficar fresquinha. ☀️",
+  "Hoje o sol parece estar caprichando. Se cuida do calor e bebe bastante água. 💧❤️",
+  "Se hidrata direitinho hoje, amor. Não quero você passando calor. ☀️💧",
+  "Dia quente pede água geladinha e um pouco de sombra. Se cuida. ❤️"
+];
+
+const MENSAGENS_FRIO = [
+  "Hoje está mais friozinho. Leva uma blusa e se cuida, amor. 🧥❤️",
+  "Parece que esfriou por aí. Se agasalha direitinho, hein? 🧥",
+  "Dia friozinho hoje. Queria estar aí para te esquentar. ❤️",
+  "Não esquece a blusa hoje, amor. Se cuida desse friozinho. 🧥❤️"
+];
+
+const MENSAGENS_NORMAL = [
+  "O tempo parece estar gostoso hoje. Aproveita seu dia e se cuida, amor. ❤️",
+  "Dia com um tempinho bom por aí. Aproveita, amor. ❤️",
+  "Tempo tranquilo hoje. Que seu dia seja assim também. ❤️"
+];
+
+/* =====================================================
+   DESCRIÇÃO DO CLIMA
+===================================================== */
+function descreverClima(codigo) {
+  if (codigo === 0) return "céu limpo";
+  if (codigo === 1) return "principalmente limpo";
+  if (codigo === 2) return "parcialmente nublado";
+  if (codigo === 3) return "nublado";
+  if (codigo === 45 || codigo === 48) return "com neblina";
+  if (codigo >= 51 && codigo <= 57) return "garoando";
+  if (codigo >= 61 && codigo <= 67) return "chovendo";
+  if (codigo >= 71 && codigo <= 77) return "nevando";
+  if (codigo >= 80 && codigo <= 82) return "com pancadas de chuva";
+  if (codigo >= 95) return "com tempestade";
+  return "com tempo instável";
+}
+
+/* =====================================================
+   FUNÇÕES DO DIA (mudam à meia-noite, estáveis o dia todo)
+===================================================== */
+function numeroDoDia(data) {
+  return Math.floor(
+    new Date(data.getFullYear(), data.getMonth(), data.getDate()) / 86400000
+  );
+}
+
+function sorteioDoDia(numero) {
+  const x = Math.sin(numero * 12.9898) * 43758.5453;
+  return x - Math.floor(x);
+}
+
+// Usa um "deslocamento" diferente da foto para as duas não ficarem sincronizadas
+function escolherDoDia(lista) {
+  const dia = numeroDoDia(new Date());
+  return lista[Math.floor(sorteioDoDia(dia + 101) * lista.length)];
+}
+
+function mensagemDoDia() {
+  return MENSAGENS[numeroDoDia(new Date()) % MENSAGENS.length];
+}
+
+function fotoDoDia() {
+  const total = CONFIG.fotos.length;
+  if (!total) return "";
+  const hoje = numeroDoDia(new Date());
+  let indice = Math.floor(sorteioDoDia(hoje) * total);
+  const ontem = Math.floor(sorteioDoDia(hoje - 1) * total);
+  if (total > 1 && indice === ontem) indice = (indice + 1) % total;
+  return CONFIG.fotos[indice];
+}
+
+function diasJuntos() {
+  const inicio = new Date(CONFIG.inicioNamoro + "T00:00:00");
+  return Math.floor((new Date() - inicio) / 86400000);
+}
+
+/* =====================================================
+   MENSAGEM BASEADA NO CLIMA
+===================================================== */
+function mensagemSobreClima(temperatura, codigo, chanceChuva, chuvaAgora) {
+  const chovendo =
+    codigo >= 95 ||
+    (codigo >= 51 && codigo <= 67) ||
+    (codigo >= 80 && codigo <= 82) ||
+    chuvaAgora > 0 ||
+    chanceChuva >= 60;
+
+  if (chovendo) return escolherDoDia(MENSAGENS_CHUVA);
+  if (temperatura >= 28) return escolherDoDia(MENSAGENS_CALOR);
+  if (temperatura <= 16) return escolherDoDia(MENSAGENS_FRIO);
+  return escolherDoDia(MENSAGENS_NORMAL);
+}
+
+/* =====================================================
+   API DO CLIMA
+===================================================== */
+async function carregarClima() {
+  const el = document.getElementById("clima");
+
+  try {
+    // 1. Cidade -> latitude/longitude
+    const urlGeo =
+      "https://geocoding-api.open-meteo.com/v1/search?name=" +
+      encodeURIComponent(CONFIG.cidadeDela) +
+      "&count=1&language=pt&format=json";
+
+    const respostaGeo = await fetch(urlGeo);
+    if (!respostaGeo.ok) throw new Error("Erro ao localizar cidade.");
+
+    const geo = await respostaGeo.json();
+    if (!geo.results || !geo.results.length) throw new Error("Cidade não encontrada.");
+
+    const { latitude, longitude, name } = geo.results[0];
+
+    // 2. Clima atual + chance de chuva por hora
+    // forecast_days=2 garante horas suficientes mesmo à noite
+    const urlClima =
+      "https://api.open-meteo.com/v1/forecast" +
+      "?latitude=" + latitude +
+      "&longitude=" + longitude +
+      "&current=temperature_2m,apparent_temperature,relative_humidity_2m,precipitation,weather_code,wind_speed_10m" +
+      "&hourly=precipitation_probability" +
+      "&timezone=America%2FSao_Paulo" +
+      "&forecast_days=2";
+
+    const respostaClima = await fetch(urlClima);
+    if (!respostaClima.ok) throw new Error("Erro ao buscar clima.");
+
+    const clima = await respostaClima.json();
+    const atual = clima.current;
+
+    const temperatura = Math.round(atual.temperature_2m);
+    const sensacao = Math.round(atual.apparent_temperature);
+    const umidade = Math.round(atual.relative_humidity_2m);
+    const vento = Math.round(atual.wind_speed_10m);
+    const chuvaAgora = Number(atual.precipitation || 0);
+    const codigo = atual.weather_code;
+
+    // 3. Maior chance de chuva nas próximas 6 horas
+    // Usa a hora que a própria API informa (horário de Brasília), não a do aparelho
+    let chanceChuva = 0;
+    const probs = clima.hourly && clima.hourly.precipitation_probability;
+    if (probs && probs.length) {
+      const hora = Number(atual.time.slice(11, 13));
+      const proximas = probs.slice(hora, hora + 6).filter(v => v !== null);
+      if (proximas.length) chanceChuva = Math.max(...proximas);
+    }
+
+    const cuidado = mensagemSobreClima(temperatura, codigo, chanceChuva, chuvaAgora);
+
+    el.innerHTML =
+      "Em " + name + " agora: <strong>" + temperatura + "°C</strong>" +
+      "<br><br><span class='cuidado'>" + cuidado + "</span>";
+
+  } catch (erro) {
+    console.error("Erro no clima:", erro);
+    el.innerHTML = "Não consegui olhar o tempo agora.<br>Mas espero que seu dia esteja lindo. ❤️";
+  }
+}
+
+/* =====================================================
+   MONTAR PÁGINA
+===================================================== */
+function montarPagina() {
+  document.getElementById("data").textContent =
+    new Date().toLocaleDateString("pt-BR", { weekday: "long", day: "numeric", month: "long" });
+
+  // Foto do dia; se a imagem não existir, esconde em vez de mostrar ícone quebrado
+  const foto = document.getElementById("foto");
+  foto.onerror = () => { foto.style.display = "none"; };
+  foto.src = fotoDoDia();
+
+  document.getElementById("mensagem").textContent = "Oi, " + CONFIG.nomeDela + ". " + mensagemDoDia();
+  document.getElementById("assinatura").textContent = "— " + CONFIG.seuNome;
+
+  const dias = diasJuntos();
+  document.getElementById("juntos").innerHTML = dias >= 0
+    ? "Hoje fazem <strong>" + dias.toLocaleString("pt-BR") + " dias</strong> que a gente tá junto."
+    : "";
+
+  carregarClima();
+}
+
+/* =====================================================
+   CONFIRMAR LEITURA + SEQUÊNCIA DE DIAS
+===================================================== */
+const CHAVE_PROGRESSO = "cartaDoDia";
+
+function lerProgresso() {
+  try { return JSON.parse(localStorage.getItem(CHAVE_PROGRESSO)) || {}; } catch (e) { return {}; }
+}
+
+function salvarProgresso(p) {
+  try { localStorage.setItem(CHAVE_PROGRESSO, JSON.stringify(p)); } catch (e) {}
+}
+
+// Data no formato "AAAA-MM-DD" (horário local)
+function chaveDia(data) {
+  const m = String(data.getMonth() + 1).padStart(2, "0");
+  const d = String(data.getDate()).padStart(2, "0");
+  return data.getFullYear() + "-" + m + "-" + d;
+}
+
+/* =====================================================
+   CALENDÁRIO (segunda tela, dentro da mesma página)
+===================================================== */
+function configurarCalendario() {
+  const telaCarta = document.getElementById("tela-carta");
+  const telaCal = document.getElementById("tela-calendario");
+  const grade = document.getElementById("cal-grade");
+  const rotuloMes = document.getElementById("cal-mes");
+  const resumo = document.getElementById("cal-resumo");
+  const MESES = [
+    "janeiro", "fevereiro", "março", "abril", "maio", "junho",
+    "julho", "agosto", "setembro", "outubro", "novembro", "dezembro"
+  ];
+
+  let ano = new Date().getFullYear();
+  let mes = new Date().getMonth();
+
+  function desenhar() {
+    const lidos = new Set(lerProgresso().dias || []);
+    const hojeChave = chaveDia(new Date());
+
+    rotuloMes.textContent = MESES[mes] + " de " + ano;
+    grade.innerHTML = "";
+
+    ["D", "S", "T", "Q", "Q", "S", "S"].forEach((letra) => {
+      const c = document.createElement("div");
+      c.className = "cal-cab";
+      c.textContent = letra;
+      grade.appendChild(c);
+    });
+
+    // espaços vazios até o dia da semana em que o mês começa
+    const vazios = new Date(ano, mes, 1).getDay();
+    for (let i = 0; i < vazios; i++) grade.appendChild(document.createElement("div"));
+
+    const total = new Date(ano, mes + 1, 0).getDate();
+    let lidosNoMes = 0;
+
+    for (let d = 1; d <= total; d++) {
+      const chave = chaveDia(new Date(ano, mes, d));
+      const c = document.createElement("div");
+      c.className = "cal-dia";
+      c.textContent = d;
+      if (lidos.has(chave)) { c.classList.add("lido"); lidosNoMes++; }
+      if (chave === hojeChave) c.classList.add("hoje");
+      grade.appendChild(c);
+    }
+
+    resumo.textContent =
+      lidosNoMes + (lidosNoMes === 1 ? " carta lida" : " cartas lidas") +
+      " em " + MESES[mes] + " · " + lidos.size + " no total";
+  }
+
+  document.getElementById("mes-anterior").addEventListener("click", () => {
+    mes--;
+    if (mes < 0) { mes = 11; ano--; }
+    desenhar();
+  });
+
+  document.getElementById("mes-proximo").addEventListener("click", () => {
+    mes++;
+    if (mes > 11) { mes = 0; ano++; }
+    desenhar();
+  });
+
+  document.getElementById("abrir-cal").addEventListener("click", () => {
+    const agora = new Date();
+    ano = agora.getFullYear();
+    mes = agora.getMonth();
+    desenhar();
+    telaCarta.classList.add("oculta");
+    telaCal.hidden = false;
+    window.scrollTo(0, 0);
+  });
+
+  document.getElementById("voltar-carta").addEventListener("click", () => {
+    telaCal.hidden = true;
+    telaCarta.classList.remove("oculta");
+    window.scrollTo(0, 0);
+  });
+}
+
+function configurarConfirmacao() {
+  const botao = document.getElementById("btn-lida");
+  const info = document.getElementById("sequencia");
+  const ler = lerProgresso;
+  const salvar = salvarProgresso;
+
+  // Se ela já tinha confirmado hoje antes do calendário existir, marca o dia
+  const inicial = ler();
+  inicial.dias = inicial.dias || [];
+  if (inicial.ultimo === numeroDoDia(new Date()) && !inicial.dias.includes(chaveDia(new Date()))) {
+    inicial.dias.push(chaveDia(new Date()));
+    salvar(inicial);
+  }
+
+  function mostrar(p) {
+    const hoje = numeroDoDia(new Date());
+    const lidaHoje = p.ultimo === hoje;
+    const ativa = p.ultimo === hoje || p.ultimo === hoje - 1; // sequência só vale se leu hoje ou ontem
+
+    botao.textContent = lidaHoje ? "Carta de hoje lida ✓" : "Li a carta de hoje 💌";
+    botao.classList.toggle("lida", lidaHoje);
+    botao.disabled = lidaHoje;
+
+    info.textContent = ativa && p.sequencia > 0
+      ? "❤️ " + p.sequencia + (p.sequencia === 1 ? " dia" : " dias") + " seguidos lendo a carta"
+      : "";
+  }
+
+  mostrar(ler());
+
+  botao.addEventListener("click", () => {
+    const hoje = numeroDoDia(new Date());
+    const p = ler();
+    if (p.ultimo === hoje) return;
+
+    p.sequencia = p.ultimo === hoje - 1 ? (p.sequencia || 0) + 1 : 1;
+    p.total = (p.total || 0) + 1;
+    p.ultimo = hoje;
+    p.dias = p.dias || [];
+    const chave = chaveDia(new Date());
+    if (!p.dias.includes(chave)) p.dias.push(chave);
+    salvar(p);
+    mostrar(p);
+
+    // Abre o WhatsApp com a mensagem pronta (ela só precisa apertar enviar)
+    if (CONFIG.whatsappDele) {
+      const texto = "Oi, " + CONFIG.seuNome + "! Li a carta de hoje ❤️" +
+        (p.sequencia > 1 ? " (" + p.sequencia + " dias seguidos!)" : "");
+      window.open(
+        "https://wa.me/" + CONFIG.whatsappDele + "?text=" + encodeURIComponent(texto),
+        "_blank"
+      );
+    }
+  });
+}
+
+/* =====================================================
+   ENVELOPE: toque para abrir a carta
+===================================================== */
+function configurarEnvelope() {
+  const tela = document.getElementById("envelope");
+  const carta = document.querySelector(".carta");
+
+  document.getElementById("envelope-dica").textContent =
+    "Uma carta pra você, " + CONFIG.nomeDela + ". Toque para abrir 💌";
+
+  const reduzir = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  let aberto = false;
+
+  tela.addEventListener("click", () => {
+    if (aberto) return;
+    aberto = true;
+    tela.classList.add("aberto");
+
+    setTimeout(() => {
+      tela.classList.add("saindo");
+      carta.classList.add("visivel");
+      setTimeout(() => tela.remove(), 800);
+    }, reduzir ? 0 : 1800);
+  });
+}
+
+configurarEnvelope();
+configurarConfirmacao();
+configurarCalendario();
+montarPagina();
+</script>
+</body>
+</html>
