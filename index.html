@@ -76,11 +76,31 @@
   }
   /* ===== CALENDÁRIO ===== */
   .carta.oculta { display: none; }
-  .topo { display: flex; justify-content: flex-end; margin: -14px 0 8px; }
-  .link-topo {
-    border: 0; background: none; padding: 4px 0; cursor: pointer;
-    color: var(--rosa); font-family: "Newsreader", Georgia, serif; font-size: 1rem;
+  .topo { display: flex; justify-content: flex-end; margin: -18px 0 16px; }
+  .btn-nav {
+    display: inline-flex; align-items: center; gap: 8px;
+    min-height: 44px; padding: 8px 18px;
+    border: 1px solid var(--linha); border-radius: 999px;
+    background: #fff; color: var(--rosa); cursor: pointer;
+    font-family: "Newsreader", Georgia, serif; font-size: 1rem;
+    box-shadow: 0 2px 8px rgba(59, 42, 85, .10);
+    transition: transform .15s ease, background .2s ease, box-shadow .2s ease;
     -webkit-tap-highlight-color: transparent;
+  }
+  .btn-nav:hover { background: #f4eaf3; }
+  .btn-nav:active { transform: scale(.95); box-shadow: none; }
+  #voltar-carta { margin-bottom: 8px; }
+
+  /* troca de tela: a nova tela desliza suavemente */
+  .calendario { animation: entrarDireita .35s ease-out both; }
+  .carta.visivel.volta { animation: entrarEsquerda .35s ease-out both; }
+  @keyframes entrarDireita {
+    from { opacity: 0; transform: translateX(28px); }
+    to   { opacity: 1; transform: none; }
+  }
+  @keyframes entrarEsquerda {
+    from { opacity: 0; transform: translateX(-28px); }
+    to   { opacity: 1; transform: none; }
   }
   .calendario {
     width: 100%; max-width: 560px; align-self: flex-start;
@@ -147,7 +167,7 @@
   .aberto .env-papel { transform: translateY(-125%); }
 
   @media (prefers-reduced-motion: reduce) {
-    .carta.visivel { animation: none; }
+    .carta.visivel, .carta.visivel.volta, .calendario { animation: none; }
     .env-aba, .env-papel, .envelope-tela { transition: none; }
     .env-selo { animation: none; }
   }
@@ -167,7 +187,7 @@
 
   <main class="carta" id="tela-carta">
     <div class="topo">
-      <button type="button" class="link-topo" id="abrir-cal">📅 Calendário</button>
+      <button type="button" class="btn-nav" id="abrir-cal"><span aria-hidden="true">📅</span> Calendário</button>
     </div>
     <p class="data" id="data"></p>
     <p class="clima" id="clima">Olhando o céu da sua cidade...</p>
@@ -183,7 +203,7 @@
   </main>
 
   <section class="calendario" id="tela-calendario" hidden>
-    <button type="button" class="link-topo" id="voltar-carta">← Carta de hoje</button>
+    <button type="button" class="btn-nav" id="voltar-carta"><span aria-hidden="true">←</span> Voltar à carta</button>
     <h2 class="cal-titulo">Nosso calendário</h2>
     <div class="cal-nav">
       <button type="button" id="mes-anterior" aria-label="Mês anterior">‹</button>
@@ -575,6 +595,7 @@ function configurarCalendario() {
 
   document.getElementById("voltar-carta").addEventListener("click", () => {
     telaCal.hidden = true;
+    telaCarta.classList.add("volta");
     telaCarta.classList.remove("oculta");
     window.scrollTo(0, 0);
   });
