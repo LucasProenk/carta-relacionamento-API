@@ -1,0 +1,5 @@
+fotos/*
+!fotos/.gitkeep
+
+surpresa/*
+!surpresa/.gitkeep
