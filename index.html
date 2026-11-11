@@ -181,7 +181,11 @@
     display: flex; flex-direction: column; align-items: center; justify-content: center;
     gap: 16px; padding: 24px; color: var(--papel); text-align: center;
   }
-  .premio-tela img { max-width: 100%; max-height: 60vh; border-radius: 6px; border: 8px solid #fff; }
+  .premio-tela img { max-width: 100%; max-height: 60vh; border-radius: 6px; border: 8px solid #fff; -webkit-touch-callout: none; -webkit-user-select: none; user-select: none; pointer-events: none; }
+  .marca-dagua {
+    position: absolute; inset: 0; z-index: 1; pointer-events: none;
+    background-image: url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='140'%3E%3Ctext x='10' y='80' transform='rotate(-25 110 70)' font-family='Georgia' font-size='18' fill='white' fill-opacity='0.2'%3Esó pra você%3C/text%3E%3C/svg%3E");
+  }
   .premio-tela p { margin: 0; max-width: 340px; font-size: 1.1rem; line-height: 1.4; }
   .premio-tela .premio-aviso { font-size: .9rem; color: #c9bddc; font-style: italic; }
   .premio-acoes { display: flex; flex-direction: column; align-items: center; gap: 12px; }
@@ -333,6 +337,7 @@
 
   <div class="premio-tela" id="premio-tela" hidden>
     <img id="premio-img" alt="Surpresa" style="display:none">
+    <div class="marca-dagua"></div>
     <p id="premio-texto"></p>
     <div class="premio-acoes premio-senha" id="premio-senha" hidden>
       <p class="premio-aviso" id="premio-dica"></p>
@@ -375,20 +380,27 @@ const CONFIG = {
   pastaSurpresa: "surpresa",
   // Senha das fotos (a mesma usada no criptografar-fotos.js).
   // Se deixar "" ela precisa DIGITAR a senha pra ver a foto (bem mais seguro).
-  senhaSurpresa: "troque-esta-senha",
-  dicaSenha: "Dica: a senha é a data do nosso primeiro date (só números).",
+  senhaSurpresa: "",
+  dicaSenha: "Dica: o dia e o mês do aniversário do Lucas (4 números).",
   recompensaTexto: "Você chegou nos 20 pontos! Essa surpresa é só sua. 💜",
-  // TESTE: se for maior que 0, o site SEMPRE abre com esses pontos e a surpresa liberada.
-  // Coloque 0 ANTES de mandar o link pra ela!
-  pontosDeTeste: 20,
-  fotos: [
+    fotos: [
     "fotos/1.jpeg",
     "fotos/2.jpeg",
     "fotos/3.jpeg",
     "fotos/4.jpeg",
     "fotos/5.jpeg",
     "fotos/6.jpeg",
-    "fotos/7.jpeg"
+    "fotos/7.jpeg",
+    "fotos/8.jpeg",
+    "fotos/9.jpeg",
+    "fotos/10.jpeg",
+    "fotos/11.jpeg",
+    "fotos/12.jpeg",
+    "fotos/13.jpeg",
+    "fotos/14.jpeg",
+    "fotos/15.jpeg",
+    "fotos/16.jpeg",
+    "fotos/17.jpeg"
   ]
 };
 
@@ -846,16 +858,14 @@ function configurarJogo() {
   const sorteTela = document.getElementById("sorte-tela");
   const sorteMsg = document.getElementById("sorte-msg");
 
-  // Pontos de teste: força os pontos ao abrir e avisa na tela pra você não esquecer ligado
-  if (CONFIG.pontosDeTeste > 0) {
-    const forcado = lerJogo();
-    forcado.pontos = CONFIG.pontosDeTeste;
-    salvarJogo(forcado);
-
-    const aviso = document.createElement("div");
-    aviso.className = "aviso-teste";
-    aviso.textContent = "🧪 Pontos de teste ligados (" + CONFIG.pontosDeTeste + "). Coloque 0 no CONFIG antes de mandar pra ela.";
-    document.body.appendChild(aviso);
+    // Presente inicial: só na primeira vez que o site abre nesse aparelho
+  if (CONFIG.pontosIniciais > 0) {
+    const inicio = lerJogo();
+    if (!inicio.presenteInicial) {
+      inicio.presenteInicial = true;
+      inicio.pontos = Math.max(inicio.pontos || 0, CONFIG.pontosIniciais);
+      salvarJogo(inicio);
+    }
   }
 
   atualizarJogo();
@@ -931,6 +941,11 @@ function configurarJogo() {
     if (fotoUrl) { URL.revokeObjectURL(fotoUrl); fotoUrl = null; }
     fotoMostrada = false;
   }
+
+  // Esconde a foto quando ela sai do app ou troca de aba
+  document.addEventListener("visibilitychange", () => {
+    img.style.visibility = document.hidden ? "hidden" : "visible";
+  });
 
   async function carregarLista() {
     try {
@@ -1246,6 +1261,7 @@ configurarCalendario();
 configurarJogo();
 configurarTeste();
 montarPagina();
+//node criptografar-fotos.js "2305"
 </script>
 </body>
 </html>
