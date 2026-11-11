@@ -76,7 +76,7 @@
   }
   /* ===== CALENDÁRIO ===== */
   .carta.oculta { display: none; }
-  .topo { display: flex; justify-content: flex-end; margin: -18px 0 16px; }
+  .topo { display: flex; justify-content: flex-end; gap: 8px; margin: -18px 0 16px; }
   .btn-nav {
     display: inline-flex; align-items: center; gap: 8px;
     min-height: 44px; padding: 8px 18px;
@@ -136,6 +136,103 @@
   .btn-lida.lida { background: #e8dff3; color: var(--suave); cursor: default; }
   .sequencia { margin: 10px 0 0; font-size: .95rem; color: var(--suave); }
 
+  /* ===== JOGO DE PONTOS ===== */
+  .jogo { margin: 0 0 24px; padding: 16px; background: #fff; border: 1px solid var(--linha); border-radius: 10px; }
+  .jogo-topo { display: flex; justify-content: space-between; align-items: baseline; font-size: 1rem; color: var(--suave); }
+  .jogo-topo strong { color: var(--rosa); font-size: 1.2rem; font-weight: 500; }
+  .barra { height: 10px; background: #e8dff3; border-radius: 999px; overflow: hidden; margin: 10px 0 14px; }
+  .barra-cheia { height: 100%; width: 0; background: var(--rosa); border-radius: 999px; transition: width .6s ease; }
+  .jogo-linha { display: flex; align-items: center; gap: 12px; }
+  .roleta {
+    flex: 0 0 64px; height: 64px; display: flex; align-items: center; justify-content: center;
+    border-radius: 12px; background: var(--noite); color: #fff;
+    font-family: "Caveat", cursive; font-size: 2.2rem;
+  }
+  .roleta.girando { animation: tremer .15s linear infinite; }
+  @keyframes tremer { 0%, 100% { transform: rotate(-3deg); } 50% { transform: rotate(3deg); } }
+  .btn-jogar {
+    flex: 1; min-height: 52px; border: 0; border-radius: 12px;
+    background: var(--rosa); color: #fff; cursor: pointer;
+    font-family: "Newsreader", Georgia, serif; font-size: 1.05rem;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .btn-jogar:disabled { background: #e8dff3; color: var(--suave); cursor: default; }
+  .jogo-msg { margin: 10px 0 0; font-size: .95rem; color: var(--suave); min-height: 1.3em; }
+
+  .premio-btn {
+    position: fixed; right: 16px; bottom: calc(16px + env(safe-area-inset-bottom, 0px)); z-index: 5;
+    width: 64px; height: 64px; border-radius: 50%; border: 3px solid #ffd978;
+    background: var(--tinta); color: #fff; font-size: 1.9rem; line-height: 1; cursor: pointer;
+    box-shadow: 0 0 18px rgba(255, 217, 120, .75), 0 8px 22px rgba(0, 0, 0, .4);
+    animation: pulsar 1.4s ease-in-out infinite;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .premio-btn::after {
+    content: "✨"; position: absolute; top: -10px; right: -8px; font-size: 1.15rem;
+    animation: brilho 1.2s ease-in-out infinite;
+  }
+  @keyframes brilho {
+    0%, 100% { opacity: .25; transform: scale(.7) rotate(0deg); }
+    50%      { opacity: 1;   transform: scale(1.2) rotate(20deg); }
+  }
+  .premio-btn[hidden], .premio-tela[hidden] { display: none; }
+  .premio-tela {
+    position: fixed; inset: 0; z-index: 20; background: rgba(20, 12, 32, .95);
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    gap: 16px; padding: 24px; color: var(--papel); text-align: center;
+  }
+  .premio-tela img { max-width: 100%; max-height: 60vh; border-radius: 6px; border: 8px solid #fff; }
+  .premio-tela p { margin: 0; max-width: 340px; font-size: 1.1rem; line-height: 1.4; }
+  .premio-tela .premio-aviso { font-size: .9rem; color: #c9bddc; font-style: italic; }
+  .premio-acoes { display: flex; flex-direction: column; align-items: center; gap: 12px; }
+  .premio-acoes[hidden] { display: none; }
+  .premio-linha { display: flex; gap: 10px; }
+  .premio-senha input {
+    width: 230px; padding: 12px 14px; border: 1px solid var(--linha); border-radius: 10px;
+    font-family: "Newsreader", Georgia, serif; font-size: 1.05rem; text-align: center;
+  }
+  .btn-sair { background: var(--rosa); border-color: var(--rosa); color: #fff; }
+  .btn-sair:hover { background: #a93a5b; }
+
+  /* botão de cassino no topo + janelinha da sorte */
+  .btn-cassino { position: relative; min-width: 48px; justify-content: center; padding: 8px 14px; font-size: 1.35rem; }
+  .ponto-novo {
+    position: absolute; top: 3px; right: 3px; width: 13px; height: 13px;
+    border-radius: 50%; background: var(--rosa); border: 2px solid #fff;
+  }
+  .sorte-tela {
+    position: fixed; inset: 0; z-index: 15; background: rgba(20, 12, 32, .85);
+    display: flex; align-items: center; justify-content: center; padding: 24px;
+  }
+  .sorte-tela[hidden] { display: none; }
+  .sorte-caixa {
+    width: 100%; max-width: 340px; background: var(--papel); border-radius: 12px;
+    padding: 24px 22px; text-align: center; display: flex; flex-direction: column; align-items: center; gap: 14px;
+    box-shadow: 0 18px 50px rgba(0, 0, 0, .5);
+  }
+  .sorte-titulo { margin: 0; font-family: "Caveat", cursive; font-size: 2.2rem; font-weight: 500; color: var(--tinta); }
+  .sorte-sub { margin: 0; font-size: .95rem; color: var(--suave); }
+  .sorte-caixa .roleta { flex: none; width: 110px; height: 110px; font-size: 3.6rem; }
+  .sorte-caixa .btn-jogar { flex: none; width: 100%; }
+  .sorte-msg { margin: 0; min-height: 1.4em; font-size: 1rem; color: var(--tinta); }
+
+  .aviso-teste {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 25; padding: 6px 12px;
+    background: #ffd978; color: #3b2a55; font-size: .8rem; text-align: center;
+    padding-top: calc(6px + env(safe-area-inset-top, 0px));
+  }
+
+  /* ===== PAINEL DE TESTE (só aparece com ?teste no endereço) ===== */
+  .painel-teste {
+    position: fixed; left: 8px; bottom: calc(8px + env(safe-area-inset-bottom, 0px)); z-index: 30;
+    display: flex; flex-direction: column; gap: 6px; max-width: 210px; padding: 10px;
+    background: rgba(20, 12, 32, .94); color: #fff; border-radius: 10px; font-size: .85rem;
+  }
+  .painel-teste button {
+    border: 0; border-radius: 8px; padding: 8px 10px; background: #fff; color: var(--tinta);
+    font-family: inherit; font-size: .85rem; text-align: left; cursor: pointer;
+  }
+
   /* ===== ENVELOPE ===== */
   .envelope-tela {
     position: fixed; inset: 0; z-index: 10;
@@ -169,7 +266,7 @@
   @media (prefers-reduced-motion: reduce) {
     .carta.visivel, .carta.visivel.volta, .calendario { animation: none; }
     .env-aba, .env-papel, .envelope-tela { transition: none; }
-    .env-selo { animation: none; }
+    .env-selo, .premio-btn, .premio-btn::after, .roleta.girando { animation: none; }
   }
 </style>
 </head>
@@ -187,6 +284,7 @@
 
   <main class="carta" id="tela-carta">
     <div class="topo">
+      <button type="button" class="btn-nav btn-cassino" id="abrir-sorte" aria-label="Sorte do dia"><span aria-hidden="true">🎰</span><span class="ponto-novo" id="ponto-novo" hidden></span></button>
       <button type="button" class="btn-nav" id="abrir-cal"><span aria-hidden="true">📅</span> Calendário</button>
     </div>
     <p class="data" id="data"></p>
@@ -199,6 +297,12 @@
       <button type="button" class="btn-lida" id="btn-lida">Li a carta de hoje 💌</button>
       <p class="sequencia" id="sequencia"></p>
     </div>
+    <div class="jogo">
+      <div class="jogo-topo"><span>⭐ Meus pontos</span><strong id="pontos-valor">0 / 20</strong></div>
+      <div class="barra"><div class="barra-cheia" id="barra"></div></div>
+      <p class="jogo-msg" id="jogo-msg"></p>
+    </div>
+
     <p class="juntos" id="juntos"></p>
   </main>
 
@@ -214,6 +318,44 @@
     <p class="cal-resumo" id="cal-resumo"></p>
   </section>
 
+  <div class="sorte-tela" id="sorte-tela" hidden>
+    <div class="sorte-caixa">
+      <h2 class="sorte-titulo">🎰 Sorte do dia</h2>
+      <p class="sorte-sub">Uma jogada por dia: de 1 a 3 pontos.</p>
+      <div class="roleta" id="roleta">?</div>
+      <button type="button" class="btn-jogar" id="btn-jogar">🎰 Girar</button>
+      <p class="sorte-msg" id="sorte-msg"></p>
+      <button type="button" class="btn-nav" id="sorte-fechar">Fechar</button>
+    </div>
+  </div>
+
+  <button type="button" class="premio-btn" id="premio-btn" hidden aria-label="Surpresa de visualização única">⭐</button>
+
+  <div class="premio-tela" id="premio-tela" hidden>
+    <img id="premio-img" alt="Surpresa" style="display:none">
+    <p id="premio-texto"></p>
+    <div class="premio-acoes premio-senha" id="premio-senha" hidden>
+      <p class="premio-aviso" id="premio-dica"></p>
+      <input type="password" id="premio-campo-senha" placeholder="Senha secreta" autocomplete="off">
+      <p class="premio-aviso" id="premio-erro"></p>
+      <div class="premio-linha">
+        <button type="button" class="btn-nav" id="premio-adiar">Agora não</button>
+        <button type="button" class="btn-nav btn-sair" id="premio-abrir">Abrir</button>
+      </div>
+    </div>
+    <div class="premio-acoes" id="premio-acao1">
+      <p class="premio-aviso">Visualização única: depois de sair, não dá pra ver de novo.</p>
+      <button type="button" class="btn-nav" id="premio-fechar">Sair</button>
+    </div>
+    <div class="premio-acoes" id="premio-acao2" hidden>
+      <p class="premio-aviso">Tem certeza? Depois de sair, a foto some e não volta mais.</p>
+      <div class="premio-linha">
+        <button type="button" class="btn-nav" id="premio-voltar">Ainda não</button>
+        <button type="button" class="btn-nav btn-sair" id="premio-confirmar">Sim, sair</button>
+      </div>
+    </div>
+  </div>
+
 <script>
 /* =====================================================
    CONFIGURAÇÕES
@@ -226,6 +368,19 @@ const CONFIG = {
   // Seu WhatsApp, só números, com 55 + DDD. Ex: "5511999999999"
   // Deixe "" para não abrir o WhatsApp (só marca como lida)
   whatsappDele: "",
+  // Jogo de pontos: ao chegar na meta, aparece o botão da surpresa (visualização única)
+  metaPontos: 20,
+  // Fotos da surpresa: ficam CRIPTOGRAFADAS na pasta "surpresa" (gerada pelo criptografar-fotos.js).
+  // Cada prêmio sorteia UMA foto aleatória que ela ainda não ganhou.
+  pastaSurpresa: "surpresa",
+  // Senha das fotos (a mesma usada no criptografar-fotos.js).
+  // Se deixar "" ela precisa DIGITAR a senha pra ver a foto (bem mais seguro).
+  senhaSurpresa: "troque-esta-senha",
+  dicaSenha: "Dica: a senha é a data do nosso primeiro date (só números).",
+  recompensaTexto: "Você chegou nos 20 pontos! Essa surpresa é só sua. 💜",
+  // TESTE: se for maior que 0, o site SEMPRE abre com esses pontos e a surpresa liberada.
+  // Coloque 0 ANTES de mandar o link pra ela!
+  pontosDeTeste: 20,
   fotos: [
     "fotos/1.jpeg",
     "fotos/2.jpeg",
@@ -601,6 +756,407 @@ function configurarCalendario() {
   });
 }
 
+/* =====================================================
+   JOGO DE PONTOS + SURPRESA DE VISUALIZAÇÃO ÚNICA
+===================================================== */
+const CHAVE_JOGO = "cartaDoDiaJogo";
+
+// Ciclo de teste: só liga se o endereço tiver ?teste. Cada giro dá a meta e a surpresa
+// libera; ao fechar a surpresa, o jogo zera e dá pra girar de novo.
+let cicloTeste = new URLSearchParams(location.search).has("teste");
+
+function lerJogo() {
+  try { return JSON.parse(localStorage.getItem(CHAVE_JOGO)) || {}; } catch (e) { return {}; }
+}
+
+function salvarJogo(j) {
+  try { localStorage.setItem(CHAVE_JOGO, JSON.stringify(j)); } catch (e) {}
+}
+
+// 25% de chance de 1 ponto, 50% de 2 pontos, 25% de 3 pontos
+function sortearPontos() {
+  const r = Math.random();
+  return r < 0.25 ? 1 : r < 0.75 ? 2 : 3;
+}
+
+// Chamada pelo botão "Li a carta de hoje" (+1 ponto)
+function ganharPontoDeLeitura() {
+  const j = lerJogo();
+  j.pontos = (j.pontos || 0) + 1;
+  salvarJogo(j);
+  atualizarJogo("💌 +1 ponto por ler a carta de hoje!");
+}
+
+// Redesenha pontos, barra, botão de jogar e botão da surpresa
+function atualizarJogo(mensagem) {
+  const j = lerJogo();
+  const pontos = j.pontos || 0;
+  const meta = CONFIG.metaPontos;
+  const jogouHoje = !cicloTeste && j.ultimoJogo === numeroDoDia(new Date());
+  const surpresaLiberada = pontos >= meta;
+
+  document.getElementById("pontos-valor").textContent = Math.min(pontos, meta) + " / " + meta;
+  document.getElementById("barra").style.width = Math.min(100, (pontos / meta) * 100) + "%";
+
+  const botao = document.getElementById("btn-jogar");
+  botao.disabled = jogouHoje;
+  botao.textContent = jogouHoje ? "Volte amanhã 🌙" : "🎰 Girar a sorte de hoje";
+  if (jogouHoje && j.ultimoResultado) {
+    document.getElementById("roleta").textContent = "+" + j.ultimoResultado;
+  }
+
+  let texto = mensagem;
+  if (surpresaLiberada) {
+    texto = (texto ? texto + " " : "") + "🎁 Tem uma surpresa te esperando no canto da tela!";
+  }
+  if (texto !== undefined) document.getElementById("jogo-msg").textContent = texto;
+
+  document.getElementById("premio-btn").hidden = !surpresaLiberada;
+  document.getElementById("ponto-novo").hidden = jogouHoje; // bolinha avisa que ainda dá pra jogar
+}
+
+// Abre uma foto criptografada (formato: sal 16 bytes + iv 12 bytes + dados) e devolve um endereço temporário
+async function descriptografarFoto(url, tipo, senha) {
+  if (!window.crypto || !window.crypto.subtle) throw new Error("Navegador sem suporte a criptografia");
+  const resposta = await fetch(url);
+  if (!resposta.ok) throw new Error("Foto não encontrada");
+  const bytes = new Uint8Array(await resposta.arrayBuffer());
+  const sal = bytes.slice(0, 16);
+  const iv = bytes.slice(16, 28);
+  const dados = bytes.slice(28);
+
+  const material = await crypto.subtle.importKey("raw", new TextEncoder().encode(senha), "PBKDF2", false, ["deriveKey"]);
+  const chave = await crypto.subtle.deriveKey(
+    { name: "PBKDF2", salt: sal, iterations: 200000, hash: "SHA-256" },
+    material,
+    { name: "AES-GCM", length: 256 },
+    false,
+    ["decrypt"]
+  );
+  const claro = await crypto.subtle.decrypt({ name: "AES-GCM", iv: iv }, chave, dados);
+  return URL.createObjectURL(new Blob([claro], { type: tipo }));
+}
+
+function configurarJogo() {
+  const botao = document.getElementById("btn-jogar");
+  const roleta = document.getElementById("roleta");
+  const premioBtn = document.getElementById("premio-btn");
+  const tela = document.getElementById("premio-tela");
+  const img = document.getElementById("premio-img");
+  const sorteTela = document.getElementById("sorte-tela");
+  const sorteMsg = document.getElementById("sorte-msg");
+
+  // Pontos de teste: força os pontos ao abrir e avisa na tela pra você não esquecer ligado
+  if (CONFIG.pontosDeTeste > 0) {
+    const forcado = lerJogo();
+    forcado.pontos = CONFIG.pontosDeTeste;
+    salvarJogo(forcado);
+
+    const aviso = document.createElement("div");
+    aviso.className = "aviso-teste";
+    aviso.textContent = "🧪 Pontos de teste ligados (" + CONFIG.pontosDeTeste + "). Coloque 0 no CONFIG antes de mandar pra ela.";
+    document.body.appendChild(aviso);
+  }
+
+  atualizarJogo();
+
+  document.getElementById("abrir-sorte").addEventListener("click", () => {
+    const jogouHoje = !cicloTeste && lerJogo().ultimoJogo === numeroDoDia(new Date());
+    sorteMsg.textContent = jogouHoje ? "Você já girou hoje. Volte amanhã! 🌙" : "Boa sorte! 🍀";
+    document.querySelector(".sorte-sub").textContent = cicloTeste
+      ? "🧪 Modo teste: giros ilimitados, cada um dá 20 pontos."
+      : "Uma jogada por dia: de 1 a 3 pontos.";
+    sorteTela.hidden = false;
+  });
+
+  document.getElementById("sorte-fechar").addEventListener("click", () => {
+    sorteTela.hidden = true;
+  });
+
+  botao.addEventListener("click", () => {
+    const j = lerJogo();
+    const hoje = numeroDoDia(new Date());
+    if (!cicloTeste && j.ultimoJogo === hoje) return;
+
+    // Sorteia e salva ANTES da animação: fechar a página não dá outra chance
+    // (no ciclo de teste, cada giro dá a meta inteira e não tem limite por dia)
+    const ganhou = cicloTeste ? CONFIG.metaPontos : sortearPontos();
+    j.ultimoJogo = hoje;
+    j.ultimoResultado = ganhou;
+    j.pontos = cicloTeste ? CONFIG.metaPontos : (j.pontos || 0) + ganhou;
+    salvarJogo(j);
+
+    botao.disabled = true;
+    botao.textContent = "Girando...";
+    roleta.classList.add("girando");
+
+    let giros = 0;
+    const timer = setInterval(() => {
+      roleta.textContent = "+" + (1 + Math.floor(Math.random() * 3));
+      giros++;
+      if (giros >= 16) {
+        clearInterval(timer);
+        roleta.classList.remove("girando");
+        roleta.textContent = "+" + ganhou;
+        let resultado =
+          ganhou >= CONFIG.metaPontos ? "🧪 Ciclo de teste: +" + ganhou + " pontos!" :
+          ganhou === 3 ? "🎉 Sorte grande! +3 pontos!" :
+          ganhou === 2 ? "✨ +2 pontos!" :
+          "💜 +1 ponto, amanhã tem mais!";
+        const atual = lerJogo();
+        if ((atual.pontos || 0) >= CONFIG.metaPontos) {
+          resultado += " 🎁 Surpresa liberada!";
+        }
+        sorteMsg.textContent = resultado;
+        atualizarJogo(resultado);
+      }
+    }, 90);
+  });
+
+  // ----- Surpresa: UMA foto ALEATÓRIA por prêmio (fotos criptografadas na pasta "surpresa") -----
+  const acao1 = document.getElementById("premio-acao1");
+  const acao2 = document.getElementById("premio-acao2");
+  const blocoSenha = document.getElementById("premio-senha");
+  const campoSenha = document.getElementById("premio-campo-senha");
+  const erroSenha = document.getElementById("premio-erro");
+  let sessao = 0;        // evita misturar aberturas se ela abrir e fechar rápido
+  let listaFotos = [];   // [{ arquivo, tipo }, ...] lida de surpresa/lista.json
+  let escolhida = null;  // posição da foto sorteada pra esse prêmio
+  let fotoUrl = null;    // endereço temporário (blob:) da foto aberta
+  let fotoMostrada = false;
+
+  function limparFoto() {
+    img.style.display = "none";
+    img.removeAttribute("src");
+    if (fotoUrl) { URL.revokeObjectURL(fotoUrl); fotoUrl = null; }
+    fotoMostrada = false;
+  }
+
+  async function carregarLista() {
+    try {
+      const resposta = await fetch(CONFIG.pastaSurpresa + "/lista.json", { cache: "no-store" });
+      if (!resposta.ok) return [];
+      const dados = await resposta.json();
+      return Array.isArray(dados) ? dados : [];
+    } catch (e) {
+      return [];
+    }
+  }
+
+  // Sorteia uma foto que ela ainda não ganhou e guarda a escolha (se reabrir, é a mesma)
+  function sortearFoto(total) {
+    const j = lerJogo();
+    if (typeof j.premioFoto === "number" && j.premioFoto < total) return j.premioFoto;
+
+    let ganhas = (j.fotosGanhas || []).filter((i) => i < total);
+    let livres = [];
+    for (let i = 0; i < total; i++) if (!ganhas.includes(i)) livres.push(i);
+    if (!livres.length) {            // já ganhou todas: recomeça o sorteio
+      j.fotosGanhas = [];
+      for (let i = 0; i < total; i++) livres.push(i);
+    }
+    const indice = livres[Math.floor(Math.random() * livres.length)];
+    j.premioFoto = indice;
+    salvarJogo(j);
+    return indice;
+  }
+
+  async function abrirFoto(senha, minhaSessao) {
+    erroSenha.textContent = "";
+    try {
+      const item = listaFotos[escolhida];
+      const url = await descriptografarFoto(CONFIG.pastaSurpresa + "/" + item.arquivo, item.tipo, senha);
+      if (minhaSessao !== sessao) { URL.revokeObjectURL(url); return; }
+      fotoUrl = url;
+      fotoMostrada = true;
+      img.src = url;
+      img.style.display = "";
+      blocoSenha.hidden = true;
+      acao1.hidden = false;
+    } catch (e) {
+      if (minhaSessao !== sessao) return;
+      erroSenha.textContent = CONFIG.senhaSurpresa
+        ? "Não consegui abrir a foto. Confira a senha no CONFIG."
+        : "Senha errada, tenta de novo. 💜";
+      document.getElementById("premio-dica").textContent = CONFIG.dicaSenha;
+      blocoSenha.hidden = false;
+      acao1.hidden = true;
+    }
+  }
+
+  // Toque na estrela
+  premioBtn.addEventListener("click", async () => {
+    const minhaSessao = ++sessao;
+    limparFoto();
+    erroSenha.textContent = "";
+    campoSenha.value = "";
+    document.getElementById("premio-texto").textContent = CONFIG.recompensaTexto;
+    acao1.hidden = false;
+    acao2.hidden = true;
+    blocoSenha.hidden = true;
+    tela.hidden = false;
+
+    listaFotos = await carregarLista();
+    if (minhaSessao !== sessao) return;
+    if (!listaFotos.length) return; // sem fotos: mostra só o texto
+
+    escolhida = sortearFoto(listaFotos.length);
+
+    if (CONFIG.senhaSurpresa) {
+      abrirFoto(CONFIG.senhaSurpresa, minhaSessao);
+    } else {
+      acao1.hidden = true;
+      document.getElementById("premio-dica").textContent = CONFIG.dicaSenha;
+      blocoSenha.hidden = false;
+      campoSenha.focus();
+    }
+  });
+
+  document.getElementById("premio-abrir").addEventListener("click", () => {
+    if (campoSenha.value) abrirFoto(campoSenha.value, sessao);
+  });
+
+  campoSenha.addEventListener("keydown", (e) => {
+    if (e.key === "Enter") document.getElementById("premio-abrir").click();
+  });
+
+  // "Agora não": fecha sem gastar o prêmio (a mesma foto volta na próxima vez)
+  document.getElementById("premio-adiar").addEventListener("click", () => {
+    sessao++;
+    limparFoto();
+    tela.hidden = true;
+  });
+
+  // "Sair" só pergunta se ela tem certeza
+  document.getElementById("premio-fechar").addEventListener("click", () => {
+    acao1.hidden = true;
+    acao2.hidden = false;
+  });
+
+  // "Ainda não" volta pra foto
+  document.getElementById("premio-voltar").addEventListener("click", () => {
+    acao2.hidden = true;
+    acao1.hidden = false;
+  });
+
+  // "Sim, sair": a foto some. Gasta 20 pontos; ao juntar de novo, vem outra foto
+  document.getElementById("premio-confirmar").addEventListener("click", () => {
+    const viu = fotoMostrada;
+    sessao++;
+    limparFoto();
+    tela.hidden = true;
+
+    if (cicloTeste) {
+      // Teste: zera tudo pra poder girar e ganhar de novo
+      try { localStorage.removeItem(CHAVE_JOGO); } catch (e) {}
+      roleta.textContent = "?";
+      sorteMsg.textContent = "";
+      atualizarJogo("🧪 Ciclo reiniciado: gire de novo!");
+      return;
+    }
+
+    if (!viu) { atualizarJogo(); return; } // não chegou a ver a foto: não gasta o prêmio
+
+    const j = lerJogo();
+    j.pontos = Math.max(0, (j.pontos || 0) - CONFIG.metaPontos);
+    j.fotosGanhas = j.fotosGanhas || [];
+    if (typeof j.premioFoto === "number" && !j.fotosGanhas.includes(j.premioFoto)) j.fotosGanhas.push(j.premioFoto);
+    delete j.premioFoto;
+    salvarJogo(j);
+
+    const faltam = Math.max(0, CONFIG.metaPontos - j.pontos);
+    atualizarJogo("✨ Prêmio aberto! Faltam " + faltam + " pontos pro próximo.");
+  });
+}
+
+/* =====================================================
+   MODO TESTE: só aparece se o endereço terminar com ?teste
+   Ex.: https://lucasproenk.github.io/carta-relacionamento-API/?teste
+   Os dados mexidos ficam só no aparelho em que você testa.
+===================================================== */
+function configurarTeste() {
+  if (!new URLSearchParams(location.search).has("teste")) return;
+
+  const painel = document.createElement("div");
+  painel.className = "painel-teste";
+  painel.innerHTML = "<strong>🧪 Modo teste</strong>";
+
+  function botao(texto, acao) {
+    const b = document.createElement("button");
+    b.type = "button";
+    b.textContent = texto;
+    b.addEventListener("click", acao);
+    painel.appendChild(b);
+    return b;
+  }
+
+  const botaoCiclo = botao("🔁 Ciclo de teste: LIGADO", () => {
+    cicloTeste = !cicloTeste;
+    botaoCiclo.textContent = "🔁 Ciclo de teste: " + (cicloTeste ? "LIGADO" : "DESLIGADO");
+    atualizarJogo();
+  });
+
+  const zerarRoleta = () => {
+    document.getElementById("roleta").textContent = "?";
+    document.getElementById("sorte-msg").textContent = "";
+  };
+
+  botao("⭐ Dar 20 pontos", () => {
+    const j = lerJogo();
+    j.pontos = CONFIG.metaPontos;
+    j.premioVisto = false; // libera a surpresa de novo
+    salvarJogo(j);
+    atualizarJogo("🧪 Teste: pontos na meta!");
+  });
+
+  botao("🎰 Jogar de novo hoje", () => {
+    const j = lerJogo();
+    delete j.ultimoJogo;
+    delete j.ultimoResultado;
+    salvarJogo(j);
+    zerarRoleta();
+    atualizarJogo("🧪 Teste: pode girar de novo.");
+  });
+
+  // Deixa 1 ponto faltando e libera a roleta: qualquer resultado (+1, +2 ou +3) bate a meta
+  botao("🎯 Roleta pra bater a meta", () => {
+    const j = lerJogo();
+    j.pontos = CONFIG.metaPontos - 1;
+    j.premioVisto = false;
+    delete j.ultimoJogo;
+    delete j.ultimoResultado;
+    salvarJogo(j);
+    zerarRoleta();
+    atualizarJogo("🧪 Teste: gire a roleta pra chegar na meta!");
+  });
+
+  botao("↺ Zerar pontos e surpresa", () => {
+    try { localStorage.removeItem(CHAVE_JOGO); } catch (e) {}
+    zerarRoleta();
+    atualizarJogo("🧪 Teste: jogo zerado.");
+  });
+
+  botao("↺ Resetar tudo e recarregar", () => {
+    try {
+      localStorage.removeItem(CHAVE_JOGO);
+      localStorage.removeItem(CHAVE_PROGRESSO);
+    } catch (e) {}
+    location.reload();
+  });
+
+  document.body.appendChild(painel);
+
+  // ?teste=20 já abre o site com 20 pontos e a surpresa liberada
+  const inicial = Number(new URLSearchParams(location.search).get("teste"));
+  if (inicial > 0) {
+    const j = lerJogo();
+    j.pontos = inicial;
+    j.premioVisto = false;
+    salvarJogo(j);
+    atualizarJogo("🧪 Teste: começou com " + inicial + " pontos.");
+  }
+}
+
 function configurarConfirmacao() {
   const botao = document.getElementById("btn-lida");
   const info = document.getElementById("sequencia");
@@ -644,6 +1200,7 @@ function configurarConfirmacao() {
     if (!p.dias.includes(chave)) p.dias.push(chave);
     salvar(p);
     mostrar(p);
+    ganharPontoDeLeitura();
 
     // Abre o WhatsApp com a mensagem pronta (ela só precisa apertar enviar)
     if (CONFIG.whatsappDele) {
@@ -686,6 +1243,8 @@ function configurarEnvelope() {
 configurarEnvelope();
 configurarConfirmacao();
 configurarCalendario();
+configurarJogo();
+configurarTeste();
 montarPagina();
 </script>
 </body>
