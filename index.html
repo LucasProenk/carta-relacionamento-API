@@ -245,6 +245,45 @@
   }
   .busca-msg { margin: 0; min-height: 1.4em; font-size: 1rem; color: var(--tinta); text-align: center; }
 
+  /* ===== CHUVA (comando rain) ===== */
+  .chuva {
+    position: fixed; inset: 0; z-index: 18; background: rgba(20, 12, 32, .35);
+    overflow: hidden; cursor: pointer; transition: opacity 1s ease;
+  }
+  .chuva.saindo { opacity: 0; }
+  .gota {
+    position: absolute; top: -40px; width: 2px; height: 18px; border-radius: 2px;
+    background: linear-gradient(to bottom, rgba(200, 220, 255, 0), rgba(200, 220, 255, .85));
+    animation: cair linear infinite;
+  }
+  @keyframes cair { to { transform: translateY(110vh); } }
+  .chuva-dica {
+    position: absolute; left: 0; right: 0; margin: 0;
+    bottom: calc(24px + env(safe-area-inset-bottom, 0px));
+    text-align: center; color: #fff; font-style: italic; font-size: .95rem; opacity: .85;
+  }
+
+  /* ===== CARTÕES DOS COMANDOS ===== */
+  .cartao-tela {
+    position: fixed; inset: 0; z-index: 17; background: rgba(20, 12, 32, .88);
+    display: flex; align-items: center; justify-content: center; padding: 24px;
+  }
+  .cartao-caixa {
+    position: relative; width: 100%; max-width: 380px; background: var(--papel); border-radius: 12px;
+    padding: 28px 24px; text-align: center; display: flex; flex-direction: column; align-items: center;
+    gap: 14px; box-shadow: 0 18px 50px rgba(0, 0, 0, .5); overflow: hidden;
+  }
+  .cartao-titulo { margin: 0; font-family: "Caveat", cursive; font-size: 2.2rem; font-weight: 500; color: var(--tinta); line-height: 1.1; }
+  .cartao-data { margin: 0; font-family: "Caveat", cursive; font-size: 3.2rem; color: var(--rosa); line-height: 1; }
+  .cartao-texto { margin: 0; font-size: 1.05rem; line-height: 1.5; color: var(--tinta); }
+  .cartao-suave { margin: 0; font-size: .95rem; color: var(--suave); font-style: italic; min-height: 1.3em; }
+  .vale-borda { border: 2px dashed var(--rosa); border-radius: 10px; padding: 16px; width: 100%; }
+  .pedido-botoes { display: flex; gap: 12px; justify-content: center; min-height: 52px; width: 100%; }
+  .pedido-botoes .btn-nav { min-width: 90px; justify-content: center; }
+  .coracoes { position: fixed; inset: 0; z-index: 19; pointer-events: none; overflow: hidden; }
+  .coracao { position: absolute; bottom: -40px; animation: subir linear forwards; }
+  @keyframes subir { to { transform: translateY(-115vh) rotate(20deg); opacity: 0; } }
+
   /* ===== PAINEL DE TESTE (só aparece com ?teste no endereço) ===== */
   .painel-teste {
     position: fixed; left: 8px; bottom: calc(8px + env(safe-area-inset-bottom, 0px)); z-index: 30;
@@ -1214,6 +1253,155 @@ function configurarComandos() {
   // comando -> pontos que ele dá (use minúsculas)
   const COMANDOS = { bets: CONFIG.metaPontos };
 
+  // Música do comando rain (link do Spotify)
+  const LINK_RAIN = "https://open.spotify.com/intl-pt/track/1uvyZBs4IZYRebHIB1747m?si=e0156032b47444d6";
+
+  // comando -> efeito na tela (pode usar quantas vezes quiser)
+  const EFEITOS = {
+    rain: () => {
+      fechar();
+      if (document.querySelector(".chuva")) { window.open(LINK_RAIN, "_blank"); return; }
+
+      const chuva = document.createElement("div");
+      chuva.className = "chuva";
+
+      const reduzir = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      if (!reduzir) {
+        for (let i = 0; i < 90; i++) {
+          const g = document.createElement("span");
+          g.className = "gota";
+          g.style.left = (Math.random() * 100) + "%";
+          g.style.animationDuration = (0.6 + Math.random() * 0.7) + "s";
+          g.style.animationDelay = (-Math.random() * 1.3) + "s";
+          g.style.opacity = String(0.4 + Math.random() * 0.6);
+          chuva.appendChild(g);
+        }
+      }
+
+      const dica = document.createElement("p");
+      dica.className = "chuva-dica";
+      dica.textContent = "toque na tela pra parar a chuva 🌧️";
+      chuva.appendChild(dica);
+
+      chuva.addEventListener("click", () => {
+        chuva.classList.add("saindo");
+        setTimeout(() => chuva.remove(), 1000);
+      });
+
+      document.body.appendChild(chuva);
+      window.open(LINK_RAIN, "_blank");
+    }
+  };
+
+  // ===== TEXTOS DOS COMANDOS (edite aqui) =====
+  const TEXTO_TEAMO = "Te amo, amor. Obrigado por existir na minha vida.";
+  const TEXTO_SAUDADE = "Quando bater saudade, lembra que eu tô pensando em você também. Daqui a pouco a gente se vê e eu te dou o abraço que tô guardando.";
+  const TEXTO_VALE = "Vale 1 jantar escolhido por você 🍽️";
+  const PERGUNTA_PEDIDO = "Quer sair comigo de novo?";
+
+  // Abre um cartão no meio da tela com o conteúdo (HTML) e um botão Fechar
+  function cartao(conteudo) {
+    fechar();
+    const cx = document.createElement("div");
+    cx.className = "cartao-tela";
+    cx.innerHTML = '<div class="cartao-caixa">' + conteudo +
+      '<button type="button" class="btn-nav cartao-fechar">Fechar</button></div>';
+    cx.querySelector(".cartao-fechar").addEventListener("click", () => cx.remove());
+    document.body.appendChild(cx);
+    return cx;
+  }
+
+  // Corações subindo pela tela
+  function coracoes(qtd) {
+    const c = document.createElement("div");
+    c.className = "coracoes";
+    const emojis = ["💜", "❤️", "💗", "💖"];
+    for (let i = 0; i < qtd; i++) {
+      const s = document.createElement("span");
+      s.className = "coracao";
+      s.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+      s.style.left = (Math.random() * 100) + "%";
+      s.style.fontSize = (18 + Math.random() * 22) + "px";
+      s.style.animationDuration = (3 + Math.random() * 3) + "s";
+      s.style.animationDelay = (Math.random() * 1.5) + "s";
+      c.appendChild(s);
+    }
+    document.body.appendChild(c);
+    setTimeout(() => c.remove(), 8000);
+  }
+
+  Object.assign(EFEITOS, {
+    "0609": () => {
+      const p = CONFIG.inicioNamoro.split("-");
+      const dias = diasJuntos();
+      cartao(
+        '<h2 class="cartao-titulo">O dia em que tudo começou</h2>' +
+        '<p class="cartao-data">' + p[2] + "/" + p[1] + "/" + p[0] + "</p>" +
+        (dias >= 0
+          ? '<p class="cartao-texto">Faz <strong>' + dias.toLocaleString("pt-BR") + " dias</strong> que a gente tá junto. 💜</p>"
+          : "")
+      );
+      coracoes(40);
+    },
+
+    teamo: () => {
+      cartao(
+        '<h2 class="cartao-titulo">💜</h2>' +
+        '<p class="cartao-texto">' + TEXTO_TEAMO + "</p>"
+      );
+      coracoes(60);
+    },
+
+    saudade: () => {
+      cartao(
+        '<h2 class="cartao-titulo">Pra quando bater saudade</h2>' +
+        '<p class="cartao-texto">' + TEXTO_SAUDADE + "</p>" +
+        '<p class="cartao-suave">— ' + CONFIG.seuNome + "</p>"
+      );
+    },
+
+    vale: () => {
+      cartao(
+        '<h2 class="cartao-titulo">🎟️ Vale especial</h2>' +
+        '<div class="vale-borda"><p class="cartao-texto"><strong>' + TEXTO_VALE + "</strong></p></div>" +
+        '<p class="cartao-suave">Mostra essa tela pra mim e eu cumpro. 😉</p>'
+      );
+    },
+
+    pedido: () => {
+      const cx = cartao(
+        '<h2 class="cartao-titulo">' + PERGUNTA_PEDIDO + "</h2>" +
+        '<div class="pedido-botoes">' +
+        '<button type="button" class="btn-nav btn-sair" id="pedido-sim">Sim 💜</button>' +
+        '<button type="button" class="btn-nav" id="pedido-nao">Não</button>' +
+        "</div>" +
+        '<p class="cartao-suave" id="pedido-msg"></p>'
+      );
+      const caixa = cx.querySelector(".cartao-caixa");
+      const sim = cx.querySelector("#pedido-sim");
+      const nao = cx.querySelector("#pedido-nao");
+
+      // O botão Não foge do dedo/mouse
+      function fugir(e) {
+        if (e) e.preventDefault();
+        nao.style.position = "absolute";
+        nao.style.left = (Math.random() * Math.max(0, caixa.clientWidth - nao.offsetWidth)) + "px";
+        nao.style.top = (Math.random() * Math.max(0, caixa.clientHeight - nao.offsetHeight)) + "px";
+      }
+      nao.addEventListener("touchstart", fugir, { passive: false });
+      nao.addEventListener("mouseover", fugir);
+      nao.addEventListener("click", fugir);
+
+      sim.addEventListener("click", () => {
+        cx.querySelector(".cartao-titulo").textContent = "Eu sabia! 💜";
+        cx.querySelector("#pedido-msg").textContent = "Então já pode me chamar. 😄";
+        nao.remove();
+        sim.remove();
+        coracoes(60);
+      });
+    }
+  });
+
   function abrir() {
     msg.textContent = "";
     campo.value = "";
@@ -1226,9 +1414,14 @@ function configurarComandos() {
   }
 
   function executar() {
-    const texto = campo.value.trim().toLowerCase();
+    const texto = campo.value.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().replace(/[^a-z0-9]/g, "");
     if (!texto) return;
     campo.value = "";
+
+    if (Object.prototype.hasOwnProperty.call(EFEITOS, texto)) {
+      EFEITOS[texto]();
+      return;
+    }
 
     if (!Object.prototype.hasOwnProperty.call(COMANDOS, texto)) {
       msg.textContent = "Comando não encontrado 🔍";
