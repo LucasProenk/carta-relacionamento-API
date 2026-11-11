@@ -2,5 +2,25 @@
   {
     "arquivo": "foto-1.enc",
     "tipo": "image/jpeg"
+  },
+  {
+    "arquivo": "foto-2.enc",
+    "tipo": "image/jpeg"
+  },
+  {
+    "arquivo": "foto-3.enc",
+    "tipo": "image/jpeg"
+  },
+  {
+    "arquivo": "foto-4.enc",
+    "tipo": "image/jpeg"
+  },
+  {
+    "arquivo": "foto-5.enc",
+    "tipo": "image/jpeg"
+  },
+  {
+    "arquivo": "foto-6.enc",
+    "tipo": "image/jpeg"
   }
 ]
