@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#2a1f3d">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
@@ -76,7 +76,7 @@
   }
   /* ===== CALENDÁRIO ===== */
   .carta.oculta { display: none; }
-  .topo { display: flex; justify-content: flex-end; gap: 8px; margin: -18px 0 16px; }
+  .topo { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 8px; margin: -18px 0 16px; }
   .btn-nav {
     display: inline-flex; align-items: center; gap: 8px;
     min-height: 44px; padding: 8px 18px;
@@ -284,6 +284,78 @@
   .coracao { position: absolute; bottom: -40px; animation: subir linear forwards; }
   @keyframes subir { to { transform: translateY(-115vh) rotate(20deg); opacity: 0; } }
 
+  /* ===== ESTUDAR ===== */
+  .estudo-card { background: #fff; border: 1px solid var(--linha); border-radius: 10px; padding: 16px; margin: 0 0 18px; }
+  .estudo-card h3, .estudo-sub { margin: 0 0 6px; font-family: "Caveat", cursive; font-size: 1.7rem; font-weight: 500; color: var(--tinta); }
+  .estudo-texto { margin: 0 0 12px; font-size: 1rem; line-height: 1.5; color: var(--suave); }
+  .estudo-grade { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin: 0 0 18px; }
+  .estudo-grade .btn-nav { justify-content: center; }
+  .estudo-prog { margin: 0 0 8px; font-size: .95rem; color: var(--suave); }
+  .estudo-q { margin: 0 0 14px; font-size: 1.25rem; line-height: 1.4; font-weight: 500; color: var(--tinta); }
+  .estudo-ops { display: flex; flex-direction: column; gap: 8px; margin: 0 0 14px; }
+  .estudo-op { justify-content: flex-start; text-align: left; color: var(--tinta); }
+  .estudo-op.certo { background: #dff3e4; border-color: #7bc48f; color: #1d5c32; }
+  .estudo-op.errado { background: #fbe3e8; border-color: #e08aa0; color: #8a2745; }
+  .estudo-fb { margin: 0 0 12px; font-size: 1rem; line-height: 1.5; color: var(--tinta); min-height: 1.4em; }
+  .estudo-stat { margin: 0; padding-top: 14px; border-top: 1px solid var(--linha); font-size: .95rem; color: var(--suave); }
+
+  /* ===== LAYOUT DE APLICATIVO ===== */
+  body {
+    padding-top: calc(66px + env(safe-area-inset-top, 0px));
+    padding-bottom: calc(100px + env(safe-area-inset-bottom, 0px));
+  }
+  .topo { display: none; }
+  .envelope-tela { display: none !important; }
+
+  .splash {
+    position: fixed; inset: 0; z-index: 40; background: var(--noite);
+    display: flex; align-items: center; justify-content: center;
+    transition: opacity .8s ease, visibility .8s;
+  }
+  .splash.saindo { opacity: 0; visibility: hidden; }
+  .splash img {
+    width: 110px; height: 110px; border-radius: 26px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, .45);
+    animation: splashEntrar .9s ease-out both;
+  }
+  @keyframes splashEntrar { from { opacity: 0; transform: scale(.8); } to { opacity: 1; transform: none; } }
+
+  .app-topo {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 11;
+    display: flex; align-items: center; gap: 10px;
+    padding: calc(8px + env(safe-area-inset-top, 0px)) 16px 8px;
+    background: rgba(42, 31, 61, .96); border-bottom: 1px solid rgba(255, 255, 255, .1);
+    -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px);
+  }
+  .app-topo img { width: 30px; height: 30px; border-radius: 8px; }
+  .app-topo span { font-family: "Caveat", cursive; font-size: 1.6rem; color: #fff; line-height: 1; }
+
+  .nav-app {
+    position: fixed; left: 0; right: 0; bottom: 0; z-index: 12;
+    display: flex; justify-content: space-around; align-items: center;
+    padding: 6px 4px calc(6px + env(safe-area-inset-bottom, 0px));
+    background: rgba(42, 31, 61, .96); border-top: 1px solid rgba(255, 255, 255, .12);
+    -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px);
+  }
+  .nav-app button {
+    position: relative; flex: 1; display: flex; flex-direction: column; align-items: center; gap: 2px;
+    border: 0; background: none; padding: 4px 0; cursor: pointer;
+    color: #b9a9d4; font-family: "Newsreader", Georgia, serif; font-size: .7rem;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .nav-app .ic { font-size: 1.5rem; line-height: 1; filter: grayscale(1) opacity(.6); transition: transform .15s ease; }
+  .nav-app button.ativo { color: #fff; }
+  .nav-app button.ativo .ic { filter: none; transform: scale(1.12); }
+  .nav-app button:active .ic { transform: scale(.9); }
+  .nav-ponto {
+    position: absolute; top: 2px; left: calc(50% + 8px); width: 11px; height: 11px;
+    border-radius: 50%; background: var(--rosa); border: 2px solid var(--noite);
+  }
+  .nav-ponto[hidden] { display: none; }
+
+  .premio-btn { bottom: calc(84px + env(safe-area-inset-bottom, 0px)); }
+  .painel-teste { bottom: calc(84px + env(safe-area-inset-bottom, 0px)); }
+
   /* ===== PAINEL DE TESTE (só aparece com ?teste no endereço) ===== */
   .painel-teste {
     position: fixed; left: 8px; bottom: calc(8px + env(safe-area-inset-bottom, 0px)); z-index: 30;
@@ -333,6 +405,7 @@
 </style>
 </head>
 <body>
+  <div class="splash" id="splash"><img src="icon.png?v=2" alt=""></div>
   <button class="envelope-tela" id="envelope" type="button" aria-label="Abrir a carta">
     <span class="envelope">
       <span class="env-corpo"></span>
@@ -346,6 +419,7 @@
 
   <main class="carta" id="tela-carta">
     <div class="topo">
+      <button type="button" class="btn-nav btn-cassino" id="abrir-estudo" aria-label="Estudar"><span aria-hidden="true">📚</span></button>
       <button type="button" class="btn-nav btn-cassino" id="abrir-busca" aria-label="Comandos"><span aria-hidden="true">🔍</span></button>
       <button type="button" class="btn-nav btn-cassino" id="abrir-sorte" aria-label="Sorte do dia"><span aria-hidden="true">🎰</span><span class="ponto-novo" id="ponto-novo" hidden></span></button>
       <button type="button" class="btn-nav" id="abrir-cal"><span aria-hidden="true">📅</span> Calendário</button>
@@ -380,6 +454,24 @@
     <div class="cal-grade" id="cal-grade"></div>
     <p class="cal-resumo" id="cal-resumo"></p>
   </section>
+
+  <section class="calendario" id="tela-estudo" hidden>
+    <button type="button" class="btn-nav" id="voltar-estudo"><span aria-hidden="true">←</span> Voltar à carta</button>
+    <h2 class="cal-titulo">Estudar 📚</h2>
+    <div id="estudo-corpo"></div>
+  </section>
+
+  <script src="perguntas.js"></script>
+
+  <header class="app-topo"><img src="icon.png?v=2" alt=""><span>Carta do dia</span></header>
+
+  <nav class="nav-app" aria-label="Menu">
+    <button type="button" id="nav-inicio" data-aba="inicio" class="ativo"><span class="ic" aria-hidden="true">🏠</span>Início</button>
+    <button type="button" id="nav-estudo" data-aba="estudo"><span class="ic" aria-hidden="true">📚</span>Estudar</button>
+    <button type="button" id="nav-sorte"><span class="ic" aria-hidden="true">🎰</span>Sorte<span class="nav-ponto" id="nav-ponto" hidden></span></button>
+    <button type="button" id="nav-cal" data-aba="cal"><span class="ic" aria-hidden="true">📅</span>Calendário</button>
+    <button type="button" id="nav-busca"><span class="ic" aria-hidden="true">🔍</span>Buscar</button>
+  </nav>
 
   <div class="sorte-tela" id="sorte-tela" hidden>
     <div class="sorte-caixa">
@@ -1452,6 +1544,247 @@ function configurarComandos() {
   });
 }
 
+/* =====================================================
+   ESTUDAR: quiz do dia + treino por matéria (perguntas em perguntas.js)
+===================================================== */
+function configurarEstudo() {
+  const CHAVE = "cartaDoDiaEstudo";
+  const PONTOS_QUIZ = 2;   // pontos no jogo ao concluir o quiz do dia (1x por dia)
+  const POR_QUIZ = 5;
+  const MATERIAS = ["Matemática", "Português", "Ciências", "História", "Geografia", "Atualidades"];
+
+  const banco = window.PERGUNTAS || [];
+  const telaCarta = document.getElementById("tela-carta");
+  const tela = document.getElementById("tela-estudo");
+  const corpo = document.getElementById("estudo-corpo");
+
+  function ler() { try { return JSON.parse(localStorage.getItem(CHAVE)) || {}; } catch (e) { return {}; } }
+  function salvar(d) { try { localStorage.setItem(CHAVE, JSON.stringify(d)); } catch (e) {} }
+
+  function el(tag, classe, texto) {
+    const x = document.createElement(tag);
+    if (classe) x.className = classe;
+    if (texto !== undefined) x.textContent = texto;
+    return x;
+  }
+
+  function embaralhar(lista) {
+    const c = lista.slice();
+    for (let a = c.length - 1; a > 0; a--) {
+      const b = Math.floor(Math.random() * (a + 1));
+      const t = c[a]; c[a] = c[b]; c[b] = t;
+    }
+    return c;
+  }
+
+  // Quiz do dia: uma pergunta de cada matéria (rodando), igual o dia todo
+  function doDia() {
+    const hoje = numeroDoDia(new Date());
+    const lista = [];
+    for (let k = 0; k < POR_QUIZ; k++) {
+      const mat = MATERIAS[(hoje + k) % MATERIAS.length];
+      const doMat = banco.filter((p) => p.m === mat);
+      if (!doMat.length) continue;
+      lista.push(doMat[Math.floor(sorteioDoDia(hoje * 7 + k) * doMat.length)]);
+    }
+    return lista;
+  }
+
+  function menu() {
+    const d = ler();
+    const hoje = numeroDoDia(new Date());
+    const feito = d.quizDia === hoje;
+    corpo.innerHTML = "";
+
+    if (!banco.length) {
+      corpo.appendChild(el("p", "estudo-texto", "As perguntas não carregaram. Confere se o arquivo perguntas.js está na pasta do site."));
+      return;
+    }
+
+    const card = el("div", "estudo-card");
+    card.appendChild(el("h3", "", "Quiz do dia"));
+    card.appendChild(el("p", "estudo-texto", feito
+      ? "Concluído hoje: " + d.quizAcertos + " de " + d.quizTotal + " ✓. Volte amanhã pra um novo (ou refaça sem pontos)."
+      : POR_QUIZ + " perguntas de matérias diferentes. Concluindo, você ganha +" + PONTOS_QUIZ + " pontos! ⭐"));
+    const b = el("button", "btn-nav btn-sair", feito ? "Refazer o quiz" : "Começar o quiz");
+    b.type = "button";
+    b.addEventListener("click", () => rodar(doDia(), !feito));
+    card.appendChild(b);
+    corpo.appendChild(card);
+
+    corpo.appendChild(el("h3", "estudo-sub", "Treinar por matéria"));
+    const grade = el("div", "estudo-grade");
+    MATERIAS.forEach((mat) => {
+      const doMat = banco.filter((p) => p.m === mat);
+      if (!doMat.length) return;
+      const bt = el("button", "btn-nav", mat);
+      bt.type = "button";
+      bt.addEventListener("click", () => rodar(embaralhar(doMat).slice(0, POR_QUIZ), false));
+      grade.appendChild(bt);
+    });
+    corpo.appendChild(grade);
+
+    corpo.appendChild(el("p", "estudo-stat",
+      "Total: " + (d.totalAcertos || 0) + " acertos em " + (d.totalRespondidas || 0) + " perguntas respondidas."));
+  }
+
+  function rodar(perguntas, vale) {
+    let i = 0;
+    let acertos = 0;
+
+    function mostrar() {
+      const p = perguntas[i];
+      const ops = embaralhar(p.o.map((t, k) => ({ t: t, ok: k === p.c })));
+      corpo.innerHTML = "";
+      corpo.appendChild(el("p", "estudo-prog", "Pergunta " + (i + 1) + " de " + perguntas.length + " · " + p.m));
+      corpo.appendChild(el("h3", "estudo-q", p.q));
+
+      const lista = el("div", "estudo-ops");
+      const fb = el("p", "estudo-fb");
+      const prox = el("div");
+      const botoes = [];
+
+      ops.forEach((o) => {
+        const b = el("button", "btn-nav estudo-op", o.t);
+        b.type = "button";
+        b.addEventListener("click", () => {
+          botoes.forEach((x) => { x.btn.disabled = true; if (x.ok) x.btn.classList.add("certo"); });
+          if (o.ok) {
+            acertos++;
+            fb.textContent = "✅ Isso aí! " + p.e;
+          } else {
+            b.classList.add("errado");
+            fb.textContent = "❌ Quase! " + p.e;
+          }
+          const d = ler();
+          d.totalRespondidas = (d.totalRespondidas || 0) + 1;
+          if (o.ok) d.totalAcertos = (d.totalAcertos || 0) + 1;
+          salvar(d);
+
+          const n = el("button", "btn-nav btn-sair", i + 1 < perguntas.length ? "Próxima" : "Ver resultado");
+          n.type = "button";
+          n.addEventListener("click", () => { i++; if (i < perguntas.length) mostrar(); else fim(); });
+          prox.appendChild(n);
+        });
+        botoes.push({ btn: b, ok: o.ok });
+        lista.appendChild(b);
+      });
+
+      corpo.appendChild(lista);
+      corpo.appendChild(fb);
+      corpo.appendChild(prox);
+    }
+
+    function fim() {
+      corpo.innerHTML = "";
+      corpo.appendChild(el("h3", "estudo-sub", "Resultado"));
+      corpo.appendChild(el("p", "estudo-q", "Você acertou " + acertos + " de " + perguntas.length + "!"));
+
+      let extra = "";
+      if (vale) {
+        const d = ler();
+        d.quizDia = numeroDoDia(new Date());
+        d.quizAcertos = acertos;
+        d.quizTotal = perguntas.length;
+        salvar(d);
+        const j = lerJogo();
+        j.pontos = (j.pontos || 0) + PONTOS_QUIZ;
+        salvarJogo(j);
+        atualizarJogo("📚 +" + PONTOS_QUIZ + " pontos pelo quiz do dia!");
+        extra = " +" + PONTOS_QUIZ + " pontos no seu jogo! ⭐";
+      }
+      const frase = acertos === perguntas.length ? "Perfeito! 🎉" : acertos >= perguntas.length / 2 ? "Muito bem! Vai ficando craque. 💪" : "Bora revisar e tentar de novo. Você consegue! 💜";
+      corpo.appendChild(el("p", "estudo-texto", frase + extra));
+
+      const v = el("button", "btn-nav btn-sair", "Voltar ao menu");
+      v.type = "button";
+      v.addEventListener("click", menu);
+      corpo.appendChild(v);
+    }
+
+    mostrar();
+  }
+
+  document.getElementById("abrir-estudo").addEventListener("click", () => {
+    menu();
+    telaCarta.classList.add("oculta");
+    tela.hidden = false;
+    window.scrollTo(0, 0);
+  });
+
+  document.getElementById("voltar-estudo").addEventListener("click", () => {
+    tela.hidden = true;
+    telaCarta.classList.add("volta");
+    telaCarta.classList.remove("oculta");
+    window.scrollTo(0, 0);
+  });
+}
+
+/* =====================================================
+   APP: tela de abertura + menu de baixo
+===================================================== */
+function configurarApp() {
+  const splash = document.getElementById("splash");
+  const carta = document.getElementById("tela-carta");
+  const telaCal = document.getElementById("tela-calendario");
+  const telaEstudo = document.getElementById("tela-estudo");
+  const envelope = document.getElementById("envelope");
+  if (envelope) envelope.remove();
+
+  // Abertura: mostra o ícone, depois some esmaecendo e a carta aparece
+  const reduzir = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  setTimeout(() => {
+    carta.classList.add("visivel");
+    splash.classList.add("saindo");
+    setTimeout(() => splash.remove(), 900);
+  }, reduzir ? 200 : 1500);
+
+  function marcar(nome) {
+    document.querySelectorAll(".nav-app button[data-aba]").forEach((b) => {
+      b.classList.toggle("ativo", b.dataset.aba === nome);
+    });
+  }
+
+  // Volta pra carta (fecha calendário ou estudo, se estiverem abertos)
+  function inicio() {
+    if (!telaCal.hidden) document.getElementById("voltar-carta").click();
+    if (!telaEstudo.hidden) document.getElementById("voltar-estudo").click();
+    marcar("inicio");
+  }
+
+  document.getElementById("nav-inicio").addEventListener("click", () => {
+    inicio();
+    window.scrollTo(0, 0);
+  });
+  document.getElementById("nav-estudo").addEventListener("click", () => {
+    inicio();
+    document.getElementById("abrir-estudo").click();
+    marcar("estudo");
+  });
+  document.getElementById("nav-cal").addEventListener("click", () => {
+    inicio();
+    document.getElementById("abrir-cal").click();
+    marcar("cal");
+  });
+  document.getElementById("nav-sorte").addEventListener("click", () => {
+    document.getElementById("abrir-sorte").click();
+  });
+  document.getElementById("nav-busca").addEventListener("click", () => {
+    document.getElementById("abrir-busca").click();
+  });
+
+  // Se ela usar o botão "Voltar à carta" dentro das telas, o menu acompanha
+  document.getElementById("voltar-carta").addEventListener("click", () => marcar("inicio"));
+  document.getElementById("voltar-estudo").addEventListener("click", () => marcar("inicio"));
+
+  // A bolinha de "ainda dá pra girar hoje" aparece também no menu de baixo
+  const origem = document.getElementById("ponto-novo");
+  const destino = document.getElementById("nav-ponto");
+  const copiar = () => { destino.hidden = origem.hidden; };
+  new MutationObserver(copiar).observe(origem, { attributes: true, attributeFilter: ["hidden"] });
+  copiar();
+}
+
 function configurarConfirmacao() {
   const botao = document.getElementById("btn-lida");
   const info = document.getElementById("sequencia");
@@ -1541,6 +1874,8 @@ configurarCalendario();
 configurarJogo();
 configurarTeste();
 configurarComandos();
+configurarEstudo();
+configurarApp();
 montarPagina();
 //node criptografar-fotos.js "2305"
 </script>
